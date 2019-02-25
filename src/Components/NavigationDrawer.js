@@ -67,6 +67,7 @@ const styles = theme => ({
         width: drawerWidth,
         flexShrink: 0,
         whiteSpace: 'nowrap',
+
     },
     drawerOpen: {
         width: drawerWidth,
@@ -90,10 +91,13 @@ const styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
-        padding: '85 8px',
+        padding: '0 8px',
         ...theme.mixins.toolbar,
     },
     content: {
+        background: "white",
+        width: "fluid",
+        height: "fluid",
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
     },
@@ -213,9 +217,10 @@ class MiniDrawer extends React.Component {
 
                     </List>
                 </Drawer>
-                <main className={classes.content}>
-                    <div className={classes.toolbar}/>
-                    <Dashboard/>
+                <main className={classes.content} >
+                    <div className={classes.toolbar} />
+
+                        <Dashboard/>
 
                 </main>
             </div>

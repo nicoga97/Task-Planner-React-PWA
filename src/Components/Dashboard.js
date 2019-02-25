@@ -1,36 +1,53 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-const styles = theme => ({
-    root: {
-        ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2,
-    },
-});
+const styles = {
+  card: {
+    display: 'block',
+    width: 'fixed',
+    marginLeft: 25,
+    marginRight: 25,
 
-function Dashboard(props) {
-    const {classes} = props;
+  },
+  bullet: {
 
-    return (
-        <div>
-            <Paper className={classes.root} elevation={1}>
-                <Typography variant="h5" component="h3">
-                    This is a sheet of paper.
-                </Typography>
-                <Typography component="p">
-                    Paper can be used to build surface or other elements for your application.
-                </Typography>
-            </Paper>
-        </div>
-    );
-}
-
-Dashboard.propTypes = {
-    classes: PropTypes.object.isRequired,
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
 };
 
-export default withStyles(styles)(Dashboard);
+function SimpleCard(props) {
+  const { classes } = props;
+
+  return (
+    <Card className={classes.card}>
+      <CardContent>
+        <Typography className={classes.title} color="textSecondary" gutterBottom>
+          Word of the Day
+        </Typography>
+
+      </CardContent>
+      <CardActions>
+        <Button size="small">Learn More</Button>
+      </CardActions>
+    </Card>
+  );
+}
+
+SimpleCard.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(SimpleCard);
