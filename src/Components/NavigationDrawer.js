@@ -25,7 +25,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Dashboard from "./Dashboard";
 
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const styles = theme => ({
     root: {
@@ -89,15 +89,11 @@ const styles = theme => ({
     },
     toolbar: {
         display: 'flex',
-        alignItems: 'center',
         justifyContent: 'flex-end',
         padding: '0 8px',
         ...theme.mixins.toolbar,
     },
     content: {
-        background: "white",
-        width: "fluid",
-        height: "fluid",
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
     },
@@ -172,7 +168,7 @@ class MiniDrawer extends React.Component {
                     <Divider/>
                     <List className={classes.avatarBox}>
 
-                        <ListItem alignItems="left">
+                        <ListItem >
                             <ListItemAvatar style={{
                                 left: -5,
                             }}>
@@ -184,8 +180,8 @@ class MiniDrawer extends React.Component {
                             />
                             <ListItemSecondaryAction style={{
                                 position: 'absolute',
-                                left: 190,
-                                top: '30%',
+                                left: 220,
+                                top: '50%',
                                 transform: 'translateY(-50%)',
                             }}>
                                 <IconButton onClick="">
@@ -219,8 +215,8 @@ class MiniDrawer extends React.Component {
                 </Drawer>
                 <main className={classes.content} >
                     <div className={classes.toolbar} />
+                    <Dashboard/>
 
-                        <Dashboard/>
 
                 </main>
             </div>

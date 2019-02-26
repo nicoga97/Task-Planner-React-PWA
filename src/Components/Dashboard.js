@@ -1,53 +1,66 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import {withStyles} from '@material-ui/core/styles';
+import Tooltip from "@material-ui/core/Tooltip";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from '@material-ui/icons/Add';
+import TaskList from "./TaskList";
 
-const styles = {
-  card: {
-    display: 'block',
-    width: 'fixed',
-    marginLeft: 25,
-    marginRight: 25,
+const styles = theme => ({
 
-  },
-  bullet: {
+    absolute: {
+        position: 'absolute',
+        bottom: theme.spacing.unit * 2,
+        right: theme.spacing.unit * 3,
+    },
+});
 
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-};
+class Dashboard extends React.Component {
 
-function SimpleCard(props) {
-  const { classes } = props;
+    constructor(props) {
+        super(props);
+        this.state = {
+            items: [{
+                "description": "some description text ",
+                "responsible": {
+                    "name": "Santiago Carrillo",
+                    "email": "sancarbar@gmail"
+                },
+                "status": "ready",
+                "dueDate": 156464645646
+            }, {
+                "description": "some description text ",
+                "responsible": {
+                    "name": "Santiago Carrillo",
+                    "email": "sancarbar@gmail"
+                },
+                "status": "In progress",
+                "dueDate": 156464645646
+            }, {
+                "description": "some description text ",
+                "responsible": {
+                    "name": "Santiago Carrillo",
+                    "email": "sancarbar@gmail"
+                },
+                "status": "Done",
+                "dueDate": 156464645646
+            }]
+        };
+    }
 
-  return (
-    <Card className={classes.card}>
-      <CardContent>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
-          Word of the Day
-        </Typography>
-
-      </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
-  );
+    render() {
+        const {classes} = this.props;
+        return (
+            <div>
+                <TaskList taskList={this.state.items}/>
+                <Tooltip title="Add" aria-label="Add">
+                    <Fab color="secondary" className={classes.absolute}>
+                        <AddIcon/>
+                    </Fab>
+                </Tooltip>
+            </div>
+        );
+    }
 }
 
-SimpleCard.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-export default withStyles(styles)(SimpleCard);
+export default withStyles(styles)(Dashboard);
