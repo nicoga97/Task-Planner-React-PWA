@@ -2,7 +2,7 @@ import React from 'react';
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
-import withStyles from "@material-ui/core/es/styles/withStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from 'prop-types';
 import Grid from "@material-ui/core/Grid";
 
