@@ -58,8 +58,10 @@ class TaskList extends React.Component {
         );
 
 
-    }
 
+    }
+    handleSubmit(e) {
+        e.preventDefault();}
 }
 TaskList.propTypes = {
     classes: PropTypes.object.isRequired,

@@ -4,6 +4,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from '@material-ui/icons/Add';
 import TaskList from "./TaskList";
+import {Link} from "react-router-dom";
+
 
 const styles = theme => ({
 
@@ -53,13 +55,14 @@ class Dashboard extends React.Component {
             <div>
                 <TaskList taskList={this.state.items}/>
                 <Tooltip title="Add" aria-label="Add">
-                    <Fab color="secondary" className={classes.absolute}>
+                    <Fab color="secondary" component={Link} to="/mainView/newTask" className={classes.absolute}>
                         <AddIcon/>
                     </Fab>
                 </Tooltip>
             </div>
         );
     }
+
 }
 
 

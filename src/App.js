@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Login from "./Components/Login"
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import NavigationDrawer from "./Components/NavigationDrawer";
 
 class App extends Component {
@@ -10,9 +10,11 @@ class App extends Component {
                 <div>
                     <div className="App">
                         <header className="App-header">
-
+                            <Switch>
                             <Route path="/mainView" component={NavigationDrawer}/>
                             <Route exact path="/" component={Login}/>
+                                <Route render={()=><h3>Page not found!</h3>}/>
+                            </Switch>
                         </header>
                     </div>
 

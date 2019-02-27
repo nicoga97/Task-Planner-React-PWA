@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {withStyles} from '@material-ui/core/styles';
@@ -16,13 +16,16 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
+import EventIcon from '@material-ui/icons/Event';
 import LaunchIcon from '@material-ui/icons/Launch';
 import Avatar from "@material-ui/core/Avatar";
 import CreateIcon from '@material-ui/icons/Create';
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Dashboard from "./Dashboard";
+import {Route,Link} from "react-router-dom";
+import MenuList from "@material-ui/core/MenuList";
+import NewTask from "./NewTask";
 
 
 const drawerWidth = 280;
@@ -104,11 +107,12 @@ const styles = theme => ({
     },
 });
 
-class MiniDrawer extends React.Component {
+class NavigationDrawer extends React.Component {
     state = {
         open: false,
 
     };
+
 
     handleDrawerOpen = () => {
         this.setState({open: true});
@@ -122,111 +126,117 @@ class MiniDrawer extends React.Component {
         const {classes, theme} = this.props;
 
         return (
-            <div className={classes.root}>
+            <Fragment>
                 <CssBaseline/>
-                <AppBar
-                    position="fixed"
-                    className={classNames(classes.appBar, {
-                        [classes.appBarShift]: this.state.open,
-                    })}
-                >
-                    <Toolbar disableGutters={!this.state.open}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="Open drawer"
-                            onClick={this.handleDrawerOpen}
-                            className={classNames(classes.menuButton, {
-                                [classes.hide]: this.state.open,
-                            })}
-                        >
-                            <MenuIcon/>
-                        </IconButton>
-                        <Typography variant="h6" color="inherit" noWrap>
-                            Task Planner
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    variant="permanent"
-                    className={classNames(classes.drawer, {
-                        [classes.drawerOpen]: this.state.open,
-                        [classes.drawerClose]: !this.state.open,
-                    })}
-                    classes={{
-                        paper: classNames({
+                <div className={classes.root}>
+                    <AppBar
+                        position="fixed"
+                        className={classNames(classes.appBar, {
+                            [classes.appBarShift]: this.state.open,
+                        })}
+                    >
+                        <Toolbar disableGutters={!this.state.open}>
+                            <IconButton
+                                color="inherit"
+                                aria-label="Open drawer"
+                                onClick={this.handleDrawerOpen}
+                                className={classNames(classes.menuButton, {
+                                    [classes.hide]: this.state.open,
+                                })}
+                            >
+                                <MenuIcon/>
+                            </IconButton>
+                            <Typography variant="h6" color="inherit" noWrap>
+                                Task Planner
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                    <Drawer
+                        variant="permanent"
+                        className={classNames(classes.drawer, {
                             [classes.drawerOpen]: this.state.open,
                             [classes.drawerClose]: !this.state.open,
-                        }),
-                    }}
-                    open={this.state.open}
-                >
-                    <div className={classes.toolbar}>
-                        <IconButton onClick={this.handleDrawerClose}>
-                            {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
-                        </IconButton>
-                    </div>
-                    <Divider/>
-                    <List className={classes.avatarBox}>
+                        })}
+                        classes={{
+                            paper: classNames({
+                                [classes.drawerOpen]: this.state.open,
+                                [classes.drawerClose]: !this.state.open,
+                            }),
+                        }}
+                        open={this.state.open}
+                    >
+                        <div className={classes.toolbar}>
+                            <IconButton onClick={this.handleDrawerClose}>
+                                {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
+                            </IconButton>
+                        </div>
+                        <Divider/>
+                        <List className={classes.avatarBox}>
 
-                        <ListItem >
-                            <ListItemAvatar style={{
-                                left: -5,
-                            }}>
-                                <Avatar>N</Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="Nicolas Garcia"
-                                secondary="nicoga97@gmail.com"
-                            />
-                            <ListItemSecondaryAction style={{
-                                position: 'absolute',
-                                left: 220,
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                            }}>
-                                <IconButton onClick="">
-                                    <CreateIcon/>
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
+                            <ListItem>
+                                <ListItemAvatar style={{
+                                    left: -5,
+                                }}>
+                                    <Avatar>N</Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Nicolas Garcia"
+                                    secondary="nicoga97@gmail.com"
+                                />
+                                <ListItemSecondaryAction style={{
+                                    position: 'absolute',
+                                    left: 220,
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                }}>
+                                    <IconButton>
+                                        <CreateIcon/>
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                            </ListItem>
 
-                    </List>
-                    <Divider/>
-                    <List>
+                        </List>
+                        <Divider/>
+                        <MenuList>
 
-                        <ListItem button key="tasks">
-                            <ListItemIcon><MailIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Tasks"/>
-                        </ListItem>
+                            <ListItem button key="tasks" component={Link} to="/mainView/tasks" >
+                                <ListItemIcon><EventIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Tasks"/>
+                            </ListItem>
 
-                    </List>
-                    <Divider/>
-                    <List>
+                        </MenuList>
+                        <Divider/>
+                        <List>
 
-                        <ListItem button key="Logout">
-                            <ListItemIcon>
-                                <LaunchIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Logout"/>
-                        </ListItem>
+                            <ListItem button key="Logout">
+                                <ListItemIcon>
+                                    <LaunchIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Logout"/>
+                            </ListItem>
 
-                    </List>
-                </Drawer>
-                <main className={classes.content} >
-                    <div className={classes.toolbar} />
-                    <Dashboard/>
+                        </List>
+                    </Drawer>
+                    <main className={classes.content}>
+                        <div className={classes.toolbar}/>
+                        <Route exact path={this.props.match.url + "/newTask"} component={NewTask}/>
+                        <Route exact path={this.props.match.url + "/tasks"} component={Dashboard}/>
 
 
-                </main>
-            </div>
+
+                    </main>
+                </div>
+            </Fragment>
         );
     }
+
+
 }
 
-MiniDrawer.propTypes = {
+NavigationDrawer.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, {withTheme: true})(MiniDrawer);
+export default withStyles(styles, {withTheme: true})(NavigationDrawer);
