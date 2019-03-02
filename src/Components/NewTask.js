@@ -2,16 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import {Link} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import DoneIcon from '@material-ui/icons/Done';
 import moment from "moment";
 import DateFnsUtils from '@date-io/date-fns';
-import {MuiPickersUtilsProvider, DatePicker} from 'material-ui-pickers';
+import {DatePicker, MuiPickersUtilsProvider} from 'material-ui-pickers';
 import Fab from "@material-ui/core/Fab";
 
 const styles = theme => ({
@@ -62,9 +61,19 @@ class NewTask extends React.Component {
     constructor(props) {
         super(props);
         this.handleDateChange = this.handleDateChange.bind(this);
-        this.state = {items: [], description: ' ', responsible: '',status:'', dueDate: moment()};
+        this.handleAddButton = this.handleAddButton.bind(this);
+        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+        this.handleResponsibleChange = this.handleResponsibleChange.bind(this);
+        this.handleStatusChange = this.handleStatusChange.bind(this);
+        this.state = {
+            dueDate: moment(),
+            description: "",
+            status: "",
+            responsible: "",
+        };
 
     }
+
 
     render() {
         const {classes} = this.props;
@@ -83,7 +92,7 @@ class NewTask extends React.Component {
                                 required
                                 id="Description"
                                 label="Description"
-                                onChange={this.handleChange('description')}
+                                onChange={this.handleDescriptionChange}
                                 defaultValue=" "
                                 className={classes.textField}
                                 margin="normal"
@@ -95,19 +104,19 @@ class NewTask extends React.Component {
                                 id="responsible"
                                 label="Responsible"
                                 defaultValue=" "
-                                onChange={this.handleChange('responsible')}
+                                onChange={this.handleResponsibleChange}
                                 className={classes.textField}
                                 margin="normal"
                             />
                                 </Grid>
                             <Grid item xs={12}>
                             <TextField
-                                id="standard-select-currency"
+                                id="standard-select"
                                 select
                                 label="Select"
                                 className={classes.textField}
                                 value={this.state.status}
-                                onChange={this.handleChange('status')}
+                                onChange={this.handleStatusChange}
                                 SelectProps={{
                                     MenuProps: {
                                         className: classes.menu,
@@ -140,7 +149,7 @@ class NewTask extends React.Component {
 
                 </Grid>
                 <Tooltip title="Add" aria-label="Add">
-                    <Fab color="primary" component={Link} to="/mainView/tasks" className={classes.absolute}>
+                    <Fab color="primary" onClick={this.handleAddButton} className={classes.absolute}>
                         <DoneIcon/>
                     </Fab>
                 </Tooltip>
@@ -148,9 +157,31 @@ class NewTask extends React.Component {
         );
     }
 
-    handleChange = name => event => {
-        this.setState({ [name]: event.target.value });
-    };
+    handleDescriptionChange(ev) {
+        this.setState({description: ev.target.value});
+    }
+
+    handleResponsibleChange(ev) {
+        this.setState({responsible: ev.target.value});
+    }
+
+    handleStatusChange(ev) {
+        this.setState({status: ev.target.value});
+    }
+
+    handleAddButton() {
+        const newTask = {
+            description: this.state.description,
+            responsible: {
+                name: this.state.responsible,
+                email: "sancarbar@gmail.com"
+            },
+            status: this.state.status,
+            dueDate: this.state.dueDate
+        };
+        this.props.addTask(newTask);
+        this.props.history.push('/mainView/tasks');
+    }
 
     handleDateChange(date) {
         this.setState({
@@ -163,4 +194,4 @@ NewTask.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(NewTask);
+export default withRouter(withStyles(styles)(NewTask));

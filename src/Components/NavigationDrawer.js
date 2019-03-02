@@ -23,9 +23,10 @@ import CreateIcon from '@material-ui/icons/Create';
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Dashboard from "./Dashboard";
-import {Route,Link} from "react-router-dom";
+import {Link, Route} from "react-router-dom";
 import MenuList from "@material-ui/core/MenuList";
 import NewTask from "./NewTask";
+import moment from "moment";
 
 
 const drawerWidth = 280;
@@ -108,10 +109,43 @@ const styles = theme => ({
 });
 
 class NavigationDrawer extends React.Component {
-    state = {
-        open: false,
 
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+            tasks: [{
+                "description": "some description text ",
+                "responsible": {
+                    "name": "Santiago Carrillo",
+                    "email": "sancarbar@gmail"
+                },
+                "status": "ready",
+                "dueDate": moment()
+            }, {
+                "description": "some description text ",
+                "responsible": {
+                    "name": "Santiago Carrillo",
+                    "email": "sancarbar@gmail"
+                },
+                "status": "In progress",
+                "dueDate": moment(),
+            }, {
+                "description": "some description text ",
+                "responsible": {
+                    "name": "Santiago Carrillo",
+                    "email": "sancarbar@gmail"
+                },
+                "status": "Done",
+                "dueDate": moment()
+            }],
+
+        };
+        this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+        this.handleDrawerClose = this.handleDrawerClose.bind(this);
+        this.addTask = this.addTask.bind(this);
+    }
+
 
 
     handleDrawerOpen = () => {
@@ -121,6 +155,15 @@ class NavigationDrawer extends React.Component {
     handleDrawerClose = () => {
         this.setState({open: false});
     };
+
+    addTask(task) {
+        console.log(task);
+        this.setState(prevState => ({
+            tasks: prevState.tasks.concat(task),
+            open: prevState.open,
+        }));
+
+    }
 
     render() {
         const {classes, theme} = this.props;
@@ -220,8 +263,10 @@ class NavigationDrawer extends React.Component {
                     </Drawer>
                     <main className={classes.content}>
                         <div className={classes.toolbar}/>
-                        <Route exact path={this.props.match.url + "/newTask"} component={NewTask}/>
-                        <Route exact path={this.props.match.url + "/tasks"} component={Dashboard}/>
+                        <Route exact path={this.props.match.url + "/newTask"}
+                               render={props => <NewTask addTask={this.addTask}/>}/>
+                        <Route exact path={this.props.match.url + "/tasks"}
+                               render={props => <Dashboard getTasks={this.state.tasks}/>}/>
 
 
 
