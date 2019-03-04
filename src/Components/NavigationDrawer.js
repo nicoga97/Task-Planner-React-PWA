@@ -27,6 +27,7 @@ import {Link, Route} from "react-router-dom";
 import MenuList from "@material-ui/core/MenuList";
 import NewTask from "./NewTask";
 import moment from "moment";
+import UserProfile from "./UserProfile";
 
 
 const drawerWidth = 280;
@@ -114,6 +115,8 @@ class NavigationDrawer extends React.Component {
         super(props);
         this.state = {
             open: false,
+            userFullName: "Nicolas Garcia",
+            userEmail: "nicoga97@gmail.com",
             tasks: [{
                 "description": "some description text ",
                 "responsible": {
@@ -144,6 +147,7 @@ class NavigationDrawer extends React.Component {
         this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
         this.handleDrawerClose = this.handleDrawerClose.bind(this);
         this.addTask = this.addTask.bind(this);
+        this.updateUserData = this.updateUserData.bind(this);
     }
 
 
@@ -157,10 +161,18 @@ class NavigationDrawer extends React.Component {
     };
 
     addTask(task) {
-        console.log(task);
         this.setState(prevState => ({
             tasks: prevState.tasks.concat(task),
             open: prevState.open,
+        }));
+
+    }
+
+    updateUserData(data) {
+        console.log(data);
+        this.setState(prevState => ({
+            userFullName: data.fullName,
+            userEmail: data.email,
         }));
 
     }
@@ -223,8 +235,8 @@ class NavigationDrawer extends React.Component {
                                     <Avatar>N</Avatar>
                                 </ListItemAvatar>
                                 <ListItemText
-                                    primary="Nicolas Garcia"
-                                    secondary="nicoga97@gmail.com"
+                                    primary={this.state.userFullName}
+                                    secondary={this.state.userEmail}
                                 />
                                 <ListItemSecondaryAction style={{
                                     position: 'absolute',
@@ -232,7 +244,7 @@ class NavigationDrawer extends React.Component {
                                     top: '50%',
                                     transform: 'translateY(-50%)',
                                 }}>
-                                    <IconButton>
+                                    <IconButton component={Link} to="/mainView/updateUserInfo">
                                         <CreateIcon/>
                                     </IconButton>
                                 </ListItemSecondaryAction>
@@ -242,7 +254,7 @@ class NavigationDrawer extends React.Component {
                         <Divider/>
                         <MenuList>
 
-                            <ListItem button key="tasks" component={Link} to="/mainView/tasks" >
+                            <ListItem button key="tasks" component={Link} to="/mainView/">
                                 <ListItemIcon><EventIcon/>
                                 </ListItemIcon>
                                 <ListItemText primary="Tasks"/>
@@ -265,9 +277,10 @@ class NavigationDrawer extends React.Component {
                         <div className={classes.toolbar}/>
                         <Route exact path={this.props.match.url + "/newTask"}
                                render={props => <NewTask addTask={this.addTask}/>}/>
-                        <Route exact path={this.props.match.url + "/tasks"}
+                        <Route exact path={this.props.match.url + "/"}
                                render={props => <Dashboard getTasks={this.state.tasks}/>}/>
-
+                        <Route exact path={this.props.match.url + "/updateUserInfo"}
+                               render={props => <UserProfile updateData={this.updateUserData}/>}/>
 
 
                     </main>

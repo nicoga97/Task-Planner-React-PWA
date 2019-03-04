@@ -180,7 +180,7 @@ class NewTask extends React.Component {
             dueDate: this.state.dueDate
         };
         this.props.addTask(newTask);
-        this.props.history.push('/mainView/tasks');
+        this.props.history.push('/mainView/');
     }
 
     handleDateChange(date) {
