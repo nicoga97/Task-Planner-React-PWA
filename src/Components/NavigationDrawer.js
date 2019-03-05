@@ -18,6 +18,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import EventIcon from '@material-ui/icons/Event';
 import LaunchIcon from '@material-ui/icons/Launch';
+import FilterIcon from '@material-ui/icons/FilterList';
 import Avatar from "@material-ui/core/Avatar";
 import CreateIcon from '@material-ui/icons/Create';
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -28,6 +29,16 @@ import MenuList from "@material-ui/core/MenuList";
 import NewTask from "./NewTask";
 import moment from "moment";
 import UserProfile from "./UserProfile";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import TextField from "@material-ui/core/TextField";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import DateFnsUtils from "@date-io/date-fns";
+import {DatePicker, MuiPickersUtilsProvider} from "material-ui-pickers";
+import MenuItem from "@material-ui/core/MenuItem";
 
 
 const drawerWidth = 280;
@@ -49,6 +60,12 @@ const styles = theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: "40vw",
+
     },
     appBarShift: {
         marginLeft: drawerWidth,
@@ -107,6 +124,16 @@ const styles = theme => ({
         width: 50,
         height: 50,
     },
+    grow: {
+        flexGrow: 1,
+    },
+    sectionDesktop: {
+        display: 'none',
+        padding: theme.spacing.unit,
+        [theme.breakpoints.up('md')]: {
+            display: 'flex',
+        },
+    },
 });
 
 class NavigationDrawer extends React.Component {
@@ -114,43 +141,65 @@ class NavigationDrawer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            dialogOpen: false,
             open: false,
             userFullName: "Nicolas Garcia",
             userEmail: "nicoga97@gmail.com",
+            users: ["Santiago Carrillo", "Andres Perez", "Nicolas Garcia", "Select"],
+            states: ["Ready", "In progress", "Done", "Select"],
+            filteredUser: "Select",
+            filteredStatus: "Select",
+            filteredDueDate: "Select",
+            fUser: "Select",
+            fStatus: "Select",
+            fDueDate: "Select",
             tasks: [{
                 "description": "some description text ",
                 "responsible": {
                     "name": "Santiago Carrillo",
                     "email": "sancarbar@gmail"
                 },
-                "status": "ready",
-                "dueDate": moment()
+                "status": "Ready",
+                "dueDate": moment('2019-03-03')
             }, {
                 "description": "some description text ",
                 "responsible": {
-                    "name": "Santiago Carrillo",
+                    "name": "Andres Perez",
                     "email": "sancarbar@gmail"
                 },
                 "status": "In progress",
-                "dueDate": moment(),
+                "dueDate": moment('2019-03-02'),
             }, {
                 "description": "some description text ",
                 "responsible": {
-                    "name": "Santiago Carrillo",
+                    "name": "Nicolas Garcia",
                     "email": "sancarbar@gmail"
                 },
                 "status": "Done",
-                "dueDate": moment()
+                "dueDate": moment('2019-03-01')
             }],
 
         };
         this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
         this.handleDrawerClose = this.handleDrawerClose.bind(this);
         this.addTask = this.addTask.bind(this);
+        this.handleDialogOpen = this.handleDialogOpen.bind(this);
+        this.handleDialogClose = this.handleDialogClose.bind(this);
         this.updateUserData = this.updateUserData.bind(this);
+        this.handleFilteredUserChange = this.handleFilteredUserChange.bind(this);
+        this.handleFilteredStateChange = this.handleFilteredStateChange.bind(this);
+        this.handleFilteredDueDateChange = this.handleFilteredDueDateChange.bind(this);
+        this.handleApplyFilter = this.handleApplyFilter.bind(this);
+        this.handleClearFilter = this.handleClearFilter.bind(this);
     }
 
+    handleDialogOpen = () => {
+        this.setState({dialogOpen: true});
+    };
 
+    handleDialogClose = () => {
+        this.setState({dialogOpen: false});
+    };
 
     handleDrawerOpen = () => {
         this.setState({open: true});
@@ -168,8 +217,41 @@ class NavigationDrawer extends React.Component {
 
     }
 
+    handleFilteredUserChange(ev) {
+        this.setState({fUser: ev.target.value});
+    }
+
+    handleFilteredStateChange(ev) {
+        this.setState({fStatus: ev.target.value});
+    }
+
+    handleFilteredDueDateChange(date) {
+        this.setState({fDueDate: moment(date)});
+    }
+
+    handleApplyFilter() {
+        this.setState({
+            filteredDueDate: this.state.fDueDate,
+            filteredStatus: this.state.fStatus,
+            filteredUser: this.state.fUser
+        });
+        this.handleDialogClose();
+    }
+
+    handleClearFilter() {
+        this.setState({
+            filteredDueDate: "Select",
+            filteredStatus: "Select",
+            filteredUser: "Select",
+            fUser: "Select",
+            fStatus: "Select",
+            fDueDate: "Select",
+
+        });
+        this.handleDialogClose();
+    }
+
     updateUserData(data) {
-        console.log(data);
         this.setState(prevState => ({
             userFullName: data.fullName,
             userEmail: data.email,
@@ -204,6 +286,81 @@ class NavigationDrawer extends React.Component {
                             <Typography variant="h6" color="inherit" noWrap>
                                 Task Planner
                             </Typography>
+                            {this.props.match.url === "/mainView/"
+                                ? <>
+                                    <div className={classes.grow}/>
+                                    <div className={classes.sectionDesktop}>
+                                        <IconButton onClick={this.handleDialogOpen} color="inherit">
+                                            <FilterIcon/>
+                                        </IconButton>
+                                    </div>
+                                    <Dialog
+                                        open={this.state.dialogOpen}
+                                        onClose={this.handleDialogClose}
+                                        aria-labelledby="form-dialog-title"
+                                    >
+                                        <DialogTitle id="form-dialog-title">Filter Tasks</DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText>
+                                                Here you can filter your tasks.
+                                            </DialogContentText>
+                                            <TextField
+                                                id="standard-select"
+                                                select
+                                                label="Select"
+                                                value={this.state.fUser}
+                                                className={classes.textField}
+                                                onChange={this.handleFilteredUserChange}
+                                                helperText="Please select the user you want to filter"
+                                                margin="normal"
+                                            >
+                                                {this.state.users.map((user, i) => (
+                                                    <MenuItem key={i} value={user}>
+                                                        {user}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            <TextField
+                                                id="standard-select"
+                                                select
+                                                label="Select"
+                                                className={classes.textField}
+                                                value={this.state.fStatus}
+                                                onChange={this.handleFilteredStateChange}
+                                                helperText="Please select the tasks state you want to filter"
+                                                margin="normal"
+                                            >
+                                                {this.state.states.map((state, i) => (
+                                                    <MenuItem key={i} value={state}>
+                                                        {state}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <DatePicker
+                                                    margin="normal"
+                                                    className={classes.textField}
+                                                    label="Date picker"
+                                                    id="due-date"
+                                                    value={this.state.fDueDate}
+                                                    onChange={this.handleFilteredDueDateChange}>
+                                                </DatePicker>
+                                            </MuiPickersUtilsProvider>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={this.handleClearFilter} color="primary">
+                                                Clear Filter
+                                            </Button>
+                                            <Button onClick={this.handleApplyFilter} color="primary">
+                                                Apply Filter
+                                            </Button>
+                                        </DialogActions>
+                                    </Dialog>
+
+                                </>
+                                : null}
+
+
                         </Toolbar>
                     </AppBar>
                     <Drawer
@@ -278,7 +435,10 @@ class NavigationDrawer extends React.Component {
                         <Route exact path={this.props.match.url + "/newTask"}
                                render={props => <NewTask addTask={this.addTask}/>}/>
                         <Route exact path={this.props.match.url + "/"}
-                               render={props => <Dashboard getTasks={this.state.tasks}/>}/>
+                               render={props => <Dashboard getTasks={this.state.tasks}
+                                                           filteredUser={this.state.filteredUser}
+                                                           filteredDueDate={this.state.filteredDueDate}
+                                                           filteredStatus={this.state.filteredStatus}/>}/>
                         <Route exact path={this.props.match.url + "/updateUserInfo"}
                                render={props => <UserProfile updateData={this.updateUserData}/>}/>
 

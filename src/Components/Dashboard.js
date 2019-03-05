@@ -46,9 +46,11 @@ class Dashboard extends React.Component {
 
 
         const {classes} = this.props;
-        const taskList = this.props.getTasks.map((task) => {
-
+        const taskList = this.props.getTasks.filter(task => (this.props.filteredUser === task.responsible.name || this.props.filteredUser === "Select")
+            && (this.props.filteredDueDate === "Select" || this.props.filteredDueDate.format('DD-MM-YYYY') === task.dueDate.format('DD-MM-YYYY'))
+            && (this.props.filteredStatus === task.status || this.props.filteredStatus === "Select")).map((task) => {
             return (
+
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Card>
@@ -69,6 +71,7 @@ class Dashboard extends React.Component {
                     </Grid>
 
                 </Grid>
+
             );
         });
         return (
