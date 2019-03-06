@@ -286,7 +286,7 @@ class NavigationDrawer extends React.Component {
                             <Typography variant="h6" color="inherit" noWrap>
                                 Task Planner
                             </Typography>
-                            {this.props.match.url === "/mainView/"
+                            {this.props.match.url === "/mainView"
                                 ? <>
                                     <div className={classes.grow}/>
                                     <div className={classes.sectionDesktop}>
@@ -411,7 +411,7 @@ class NavigationDrawer extends React.Component {
                         <Divider/>
                         <MenuList>
 
-                            <ListItem button key="tasks" component={Link} to="/mainView/">
+                            <ListItem button key="tasks" component={Link} to="/mainView">
                                 <ListItemIcon><EventIcon/>
                                 </ListItemIcon>
                                 <ListItemText primary="Tasks"/>
