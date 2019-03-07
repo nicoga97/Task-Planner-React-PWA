@@ -47,7 +47,7 @@ class Dashboard extends React.Component {
 
         const {classes} = this.props;
         const taskList = this.props.getTasks.filter(task => (this.props.filteredUser === task.responsible.name || this.props.filteredUser === "Select")
-            && (this.props.filteredDueDate === "Select" || this.props.filteredDueDate.format('DD-MM-YYYY') === task.dueDate.format('DD-MM-YYYY'))
+            && (this.props.filteredDueDate === null || this.props.filteredDueDate.format('DD-MM-YYYY') === task.dueDate.format('DD-MM-YYYY'))
             && (this.props.filteredStatus === task.status || this.props.filteredStatus === "Select")).map((task) => {
             return (
 

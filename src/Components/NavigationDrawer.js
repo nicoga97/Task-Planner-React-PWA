@@ -64,8 +64,7 @@ const styles = theme => ({
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
-        width: "40vw",
-
+        width: "100%"
     },
     appBarShift: {
         marginLeft: drawerWidth,
@@ -149,10 +148,10 @@ class NavigationDrawer extends React.Component {
             states: ["Ready", "In progress", "Done", "Select"],
             filteredUser: "Select",
             filteredStatus: "Select",
-            filteredDueDate: "Select",
+            filteredDueDate: null,
             fUser: "Select",
             fStatus: "Select",
-            fDueDate: "Select",
+            fDueDate: null,
             tasks: [{
                 "description": "some description text ",
                 "responsible": {
@@ -240,12 +239,12 @@ class NavigationDrawer extends React.Component {
 
     handleClearFilter() {
         this.setState({
-            filteredDueDate: "Select",
+            filteredDueDate: null,
             filteredStatus: "Select",
             filteredUser: "Select",
             fUser: "Select",
             fStatus: "Select",
-            fDueDate: "Select",
+            fDueDate: null,
 
         });
         this.handleDialogClose();
@@ -286,7 +285,7 @@ class NavigationDrawer extends React.Component {
                             <Typography variant="h6" color="inherit" noWrap>
                                 Task Planner
                             </Typography>
-                            {this.props.match.url === "/mainView"
+                            {this.props.history.location.pathname === "/mainView"
                                 ? <>
                                     <div className={classes.grow}/>
                                     <div className={classes.sectionDesktop}>
