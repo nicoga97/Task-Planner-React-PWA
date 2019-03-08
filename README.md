@@ -6,6 +6,7 @@
 ![Website](https://img.shields.io/website-up-down-green-red/https/task-planner-d38da.firebaseapp.com.svg?label=Firebase)
 
 This is a progresive web app which helps with task planning.
+[Link to the app](https://task-planner-d38da.firebaseapp.com/mainView) 
 
 
 ## Built With
