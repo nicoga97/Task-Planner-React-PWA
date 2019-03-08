@@ -46,6 +46,7 @@ const drawerWidth = 280;
 const styles = theme => ({
     root: {
         display: 'flex',
+        flexGrow: 1,
     },
     avatarBox: {
         width: '80%',
@@ -111,6 +112,7 @@ const styles = theme => ({
     toolbar: {
         display: 'flex',
         justifyContent: 'flex-end',
+        alignItems: 'center',
         padding: '0 8px',
         ...theme.mixins.toolbar,
     },
@@ -122,8 +124,7 @@ const styles = theme => ({
         margin: theme.spacing.unit - 10,
         width: 50,
         height: 50,
-    },
-    grow: {
+    }, grow: {
         flexGrow: 1,
     },
     sectionDesktop: {
@@ -293,6 +294,7 @@ class NavigationDrawer extends React.Component {
                                             <FilterIcon/>
                                         </IconButton>
                                     </div>
+
                                     <Dialog
                                         open={this.state.dialogOpen}
                                         onClose={this.handleDialogClose}
