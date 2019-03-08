@@ -30,22 +30,10 @@ export function register(config) {
             // serve assets; see https://github.com/facebook/create-react-app/issues/2374
             return;
         }
-        let CACHE_NAME = 'TaskPlannerCache-v1';
-        let urlsToCache = [
-            '/',
-            '/mainView',
-            '/mainView/newTask',
-            '/mainView/updateUserInfo'
-        ];
-        window.addEventListener('install', (event) => {
-            event.waitUntil(
-                caches.open(CACHE_NAME)
-                    .then(function (cache) {
-                        console.log('Opened cache');
-                        return cache.addAll(urlsToCache);
-                    })
-            );
+        window.addEventListener('install', () => {
+            console.log("install!!");
         });
+        let CACHE_NAME = 'TaskPlannerCache-v1';
 
 
         window.addEventListener('fetch', (event) => {

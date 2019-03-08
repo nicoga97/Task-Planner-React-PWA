@@ -129,7 +129,7 @@ const styles = theme => ({
     sectionDesktop: {
         display: 'none',
         padding: theme.spacing.unit,
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('xs')]: {
             display: 'flex',
         },
     },
