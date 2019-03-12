@@ -1,31 +1,31 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import React from "react";
+import PropTypes from "prop-types";
+import {withStyles} from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import {withRouter} from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
-import DoneIcon from '@material-ui/icons/Done';
+import DoneIcon from "@material-ui/icons/Done";
 import moment from "moment";
-import DateFnsUtils from '@date-io/date-fns';
-import {DatePicker, MuiPickersUtilsProvider} from 'material-ui-pickers';
+import DateFnsUtils from "@date-io/date-fns";
+import {DatePicker, MuiPickersUtilsProvider} from "material-ui-pickers";
 import Fab from "@material-ui/core/Fab";
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        textAlign: 'center',
+        textAlign: "center",
 
     },
     paper: {
         padding: theme.spacing.unit * 2,
-        textAlign: 'center',
+        textAlign: "center",
         color: theme.palette.text.secondary,
     }, container: {
-        display: 'flex',
-        flexWrap: 'wrap',
+        display: "flex",
+        flexWrap: "wrap",
     },
     textField: {
         marginLeft: theme.spacing.unit,
@@ -37,23 +37,23 @@ const styles = theme => ({
         width: 200,
     },
     absolute: {
-        position: 'absolute',
+        position: "absolute",
         bottom: theme.spacing.unit * 2,
         right: theme.spacing.unit * 3,
     },
 });
 const status = [
     {
-        value: 'Ready',
-        label: 'Ready',
+        value: "Ready",
+        label: "Ready",
     },
     {
-        value: 'In progress',
-        label: 'In progress',
+        value: "In progress",
+        label: "In progress",
     },
     {
-        value: 'Done',
-        label: 'Done',
+        value: "Done",
+        label: "Done",
     },
 ];
 class NewTask extends React.Component {
@@ -180,7 +180,7 @@ class NewTask extends React.Component {
             dueDate: this.state.dueDate
         };
         this.props.addTask(newTask);
-        this.props.history.push('/mainView');
+        this.props.history.push("/mainView");
     }
 
     handleDateChange(date) {

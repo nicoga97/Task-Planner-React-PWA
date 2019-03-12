@@ -1,30 +1,30 @@
-import React, {Fragment} from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import {withStyles} from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import EventIcon from '@material-ui/icons/Event';
-import LaunchIcon from '@material-ui/icons/Launch';
-import FilterIcon from '@material-ui/icons/FilterList';
+import React, {Fragment} from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import {withStyles} from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import EventIcon from "@material-ui/icons/Event";
+import LaunchIcon from "@material-ui/icons/Launch";
+import FilterIcon from "@material-ui/icons/FilterList";
 import Avatar from "@material-ui/core/Avatar";
-import CreateIcon from '@material-ui/icons/Create';
+import CreateIcon from "@material-ui/icons/Create";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Dashboard from "./Dashboard";
-import {Link, Route} from "react-router-dom";
+import {Link, Route, withRouter} from "react-router-dom";
 import MenuList from "@material-ui/core/MenuList";
 import NewTask from "./NewTask";
 import moment from "moment";
@@ -45,11 +45,11 @@ const drawerWidth = 280;
 
 const styles = theme => ({
     root: {
-        display: 'flex',
+        display: "flex",
         flexGrow: 1,
     },
     avatarBox: {
-        width: '80%',
+        width: "80%",
         maxWidth: 200,
         backgroundColor: theme.palette.background.paper,
 
@@ -57,7 +57,7 @@ const styles = theme => ({
 
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(['width', 'margin'], {
+        transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
@@ -70,7 +70,7 @@ const styles = theme => ({
     appBarShift: {
         marginLeft: drawerWidth,
         width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
+        transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
@@ -80,40 +80,40 @@ const styles = theme => ({
         marginRight: 36,
     },
     hide: {
-        display: 'none',
+        display: "none",
     },
     inline: {
-        display: 'inline',
+        display: "inline",
     },
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
-        whiteSpace: 'nowrap',
+        whiteSpace: "nowrap",
 
     },
     drawerOpen: {
         width: drawerWidth,
-        transition: theme.transitions.create('width', {
+        transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
     drawerClose: {
-        transition: theme.transitions.create('width', {
+        transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        overflowX: 'hidden',
+        overflowX: "hidden",
         width: theme.spacing.unit * 7 + 1,
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up("sm")]: {
             width: theme.spacing.unit * 8,
         },
     },
     toolbar: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        padding: '0 8px',
+        display: "flex",
+        justifyContent: "flex-end",
+        alignItems: "center",
+        padding: "0 8px",
         ...theme.mixins.toolbar,
     },
     content: {
@@ -128,10 +128,10 @@ const styles = theme => ({
         flexGrow: 1,
     },
     sectionDesktop: {
-        display: 'none',
+        display: "none",
         padding: theme.spacing.unit,
-        [theme.breakpoints.up('xs')]: {
-            display: 'flex',
+        [theme.breakpoints.up("xs")]: {
+            display: "flex",
         },
     },
 });
@@ -145,39 +145,14 @@ class NavigationDrawer extends React.Component {
             open: false,
             userFullName: "Nicolas Garcia",
             userEmail: "nicoga97@gmail.com",
-            users: ["Santiago Carrillo", "Andres Perez", "Nicolas Garcia", "Select"],
-            states: ["Ready", "In progress", "Done", "Select"],
             filteredUser: "Select",
             filteredStatus: "Select",
             filteredDueDate: null,
+            states: ["Ready", "In progress", "Done", "Select"],
             fUser: "Select",
             fStatus: "Select",
             fDueDate: null,
-            tasks: [{
-                "description": "some description text ",
-                "responsible": {
-                    "name": "Santiago Carrillo",
-                    "email": "sancarbar@gmail"
-                },
-                "status": "Ready",
-                "dueDate": moment('2019-03-03')
-            }, {
-                "description": "some description text ",
-                "responsible": {
-                    "name": "Andres Perez",
-                    "email": "sancarbar@gmail"
-                },
-                "status": "In progress",
-                "dueDate": moment('2019-03-02'),
-            }, {
-                "description": "some description text ",
-                "responsible": {
-                    "name": "Nicolas Garcia",
-                    "email": "sancarbar@gmail"
-                },
-                "status": "Done",
-                "dueDate": moment('2019-03-01')
-            }],
+
 
         };
         this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
@@ -226,7 +201,7 @@ class NavigationDrawer extends React.Component {
     }
 
     handleFilteredDueDateChange(date) {
-        this.setState({fDueDate: moment(date)});
+        this.setState({fDueDate: moment(date).format("YYYY-MM-DD")});
     }
 
     handleApplyFilter() {
@@ -261,7 +236,6 @@ class NavigationDrawer extends React.Component {
 
     render() {
         const {classes, theme} = this.props;
-
         return (
             <Fragment>
                 <CssBaseline/>
@@ -315,7 +289,7 @@ class NavigationDrawer extends React.Component {
                                                 helperText="Please select the user you want to filter"
                                                 margin="normal"
                                             >
-                                                {this.state.users.map((user, i) => (
+                                                {this.props.users.map((user, i) => (
                                                     <MenuItem key={i} value={user}>
                                                         {user}
                                                     </MenuItem>
@@ -380,7 +354,7 @@ class NavigationDrawer extends React.Component {
                     >
                         <div className={classes.toolbar}>
                             <IconButton onClick={this.handleDrawerClose}>
-                                {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
+                                {theme.direction === "rtl" ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
                             </IconButton>
                         </div>
                         <Divider/>
@@ -397,10 +371,10 @@ class NavigationDrawer extends React.Component {
                                     secondary={this.state.userEmail}
                                 />
                                 <ListItemSecondaryAction style={{
-                                    position: 'absolute',
+                                    position: "absolute",
                                     left: 220,
-                                    top: '50%',
-                                    transform: 'translateY(-50%)',
+                                    top: "50%",
+                                    transform: "translateY(-50%)",
                                 }}>
                                     <IconButton component={Link} to="/mainView/updateUserInfo">
                                         <CreateIcon/>
@@ -433,14 +407,14 @@ class NavigationDrawer extends React.Component {
                     </Drawer>
                     <main className={classes.content}>
                         <div className={classes.toolbar}/>
-                        <Route exact path={this.props.match.url + "/newTask"}
+                        <Route path={this.props.match.url + "/newTask"}
                                render={props => <NewTask addTask={this.addTask}/>}/>
                         <Route exact path={this.props.match.url + "/"}
-                               render={props => <Dashboard getTasks={this.state.tasks}
+                               render={props => <Dashboard tasksList={this.props.tasks}
                                                            filteredUser={this.state.filteredUser}
                                                            filteredDueDate={this.state.filteredDueDate}
                                                            filteredStatus={this.state.filteredStatus}/>}/>
-                        <Route exact path={this.props.match.url + "/updateUserInfo"}
+                        <Route path={this.props.match.url + "/updateUserInfo"}
                                render={props => <UserProfile updateData={this.updateUserData}/>}/>
 
 
@@ -458,4 +432,4 @@ NavigationDrawer.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, {withTheme: true})(NavigationDrawer);
+export default withRouter(withStyles(styles, {withTheme: true})(NavigationDrawer));
