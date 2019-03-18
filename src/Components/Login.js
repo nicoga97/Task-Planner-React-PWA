@@ -10,7 +10,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Redirect from "react-router-dom/Redirect";
+import axios from "axios";
 
 
 const styles = theme => ({
@@ -56,73 +56,89 @@ class SignIn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            navigate: false,
-            referrer: null
+            userName: "",
+            password: "",
         };
         this.handleLogin = this.handleLogin.bind(this);
+        this.handleUserNameChange = this.handleUserNameChange.bind(this);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+
     }
 
     render() {
         const {classes} = this.props;
         return (
             <div>
-
-                {this.state.navigate === true
-                    ? <div>
-
-                        {this.state.navigate ? <Redirect to={this.state.referrer}/> : null}
-                    </div>
-                    :
-                    <main className={classes.main}>
-                        <CssBaseline/>
-                        <Paper className={classes.paper}>
-                            <Typography component="h1" variant="h5">
-                                Task Planner
-                            </Typography>
-                            <Avatar src={window.location.origin + "/images/task.png"} className={classes.bigAvatar}/>
-                            <form className={classes.form}>
-                                <FormControl margin="normal" required fullWidth>
-                                    <InputLabel htmlFor="email">Email Address</InputLabel>
-                                    <Input id="email" name="email" autoComplete="email" autoFocus/>
-                                </FormControl>
-                                <FormControl margin="normal" required fullWidth>
-                                    <InputLabel htmlFor="password">Password</InputLabel>
-                                    <Input name="password" type="password" id="password"
-                                           autoComplete="current-password"/>
-                                </FormControl>
-                                <FormControlLabel
-                                    control={<Checkbox value="remember" color="primary"/>}
-                                    label="Remember me"
-                                />
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={this.handleLogin}
-                                    className={classes.submit}
-                                >
-                                    Login
-                                </Button>
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    color="primary"
-                                    className={classes.submit}
-                                >
-                                    Create Account
-                                </Button>
-                            </form>
-                        </Paper>
-                    </main>}
+                <main className={classes.main}>
+                    <CssBaseline/>
+                    <Paper className={classes.paper}>
+                        <Typography component="h1" variant="h5">
+                            Task Planner
+                        </Typography>
+                        <Avatar src={window.location.origin + "/images/task.png"} className={classes.bigAvatar}/>
+                        <form className={classes.form}>
+                            <FormControl margin="normal" required fullWidth>
+                                <InputLabel htmlFor="userName">User Name</InputLabel>
+                                <Input id="userName" name="userName" autoComplete="userName"
+                                       onChange={this.handleUserNameChange} autoFocus/>
+                            </FormControl>
+                            <FormControl margin="normal" required fullWidth>
+                                <InputLabel htmlFor="password">Password</InputLabel>
+                                <Input name="password" type="password" id="password"
+                                       autoComplete="current-password" onChange={this.handlePasswordChange}/>
+                            </FormControl>
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary"/>}
+                                label="Remember me"
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                onClick={this.handleLogin}
+                                className={classes.submit}
+                            >
+                                Login
+                            </Button>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                            >
+                                Create Account
+                            </Button>
+                        </form>
+                    </Paper>
+                </main>
             </div>
         );
 
     }
 
-    handleLogin(e) {
+    handleUserNameChange(ev) {
+        this.setState({userName: ev.target.value});
+    }
+
+    handlePasswordChange(ev) {
+        this.setState({password: ev.target.value});
+    }
+
+    async handleLogin(e) {
         e.preventDefault();
-        this.setState({navigate: true, referrer: "/mainView"});
+        await axios.post('https://task-panner-api.herokuapp.com/user/login', {
+            username: this.state.userName,
+            password: this.state.password
+        }).then((response) => {
+            localStorage.setItem("accessToken", response.data.accessToken);
+            localStorage.setItem("loggedIn", "true");
+            this.props.history.push("/mainView")
+        }).catch(function (error) {
+            console.log(error);
+            alert("Invalid Credentials!")
+        });
+
     }
 
 }

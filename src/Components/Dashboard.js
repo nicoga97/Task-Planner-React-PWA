@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
+import axios from "axios";
 
 
 const styles = theme => ({
@@ -33,9 +34,39 @@ const styles = theme => ({
     },
 
 });
-
+const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8080/api/',
+    timeout: 1000,
+    headers: {'Authorization': 'Bearer ' + localStorage.getItem("accessToken")}
+});
 class Dashboard extends React.Component {
 
+    componentDidMount() {
+
+        fetch('https://task-panner-api.herokuapp.com/tasks')
+            .then(response => response.json())
+            .then(data => {
+                let tasksList = [];
+                data.forEach(function (task) {
+                    tasksList.push(
+                        task
+                    )
+                });
+                this.setState({tasksList: tasksList});
+            });
+        fetch('https://task-panner-api.herokuapp.com/users')
+            .then(response => response.json())
+            .then(data => {
+                let users = [];
+                data.forEach(function (user) {
+                    users.push(
+                        user.name
+                    )
+                });
+                users.push("Select");
+                this.setState({users: users});
+            });
+    }
 
     render() {
         const {classes} = this.props;
@@ -57,12 +88,9 @@ class Dashboard extends React.Component {
                                 <Typography component="p">
                                     {task.responsible.name}
                                 </Typography>
-
                             </CardContent>
-
                         </Card>
                     </Grid>
-
                 </Grid>
 
             );
