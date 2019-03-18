@@ -11,6 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import axios from "axios";
+import {withRouter} from "react-router-dom";
 
 
 const styles = theme => ({
@@ -125,22 +126,22 @@ class SignIn extends React.Component {
         this.setState({password: ev.target.value});
     }
 
-    async handleLogin(e) {
+    handleLogin(e) {
         e.preventDefault();
-        await axios.post('https://task-panner-api.herokuapp.com/user/login', {
+        axios.post('https://task-panner-api.herokuapp.com/user/login', {
             username: this.state.userName,
             password: this.state.password
         }).then((response) => {
             localStorage.setItem("accessToken", response.data.accessToken);
-            localStorage.setItem("loggedIn", "true");
+            this.props.changeLoggedStatus();
             this.props.history.push("/mainView")
         }).catch(function (error) {
-            console.log(error);
             alert("Invalid Credentials!")
         });
+
 
     }
 
 }
 
-export default withStyles(styles)(SignIn);
+export default withRouter(withStyles(styles)(SignIn));

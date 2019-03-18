@@ -39,6 +39,7 @@ import Button from "@material-ui/core/Button";
 import DateFnsUtils from "@date-io/date-fns";
 import {DatePicker, MuiPickersUtilsProvider} from "material-ui-pickers";
 import MenuItem from "@material-ui/core/MenuItem";
+import api from "./api";
 
 
 const drawerWidth = 280;
@@ -152,8 +153,8 @@ class NavigationDrawer extends React.Component {
             fUser: "Select",
             fStatus: "Select",
             fDueDate: null,
-
-
+            tasks: [],
+            users: [],
         };
         this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
         this.handleDrawerClose = this.handleDrawerClose.bind(this);
@@ -234,6 +235,23 @@ class NavigationDrawer extends React.Component {
 
     }
 
+    componentDidMount() {
+
+        api.get(`tasks`)
+            .then(res => {
+                console.log(res.data);
+                this.setState({tasks: res.data});
+            }).catch(function (error) {
+            console.log(error)
+        });
+        api.get(`users`)
+            .then(res => {
+                console.log(res.data);
+                this.setState({users: res.data});
+            })
+
+    }
+
     render() {
         const {classes, theme} = this.props;
         return (
@@ -289,7 +307,7 @@ class NavigationDrawer extends React.Component {
                                                 helperText="Please select the user you want to filter"
                                                 margin="normal"
                                             >
-                                                {this.props.users.map((user, i) => (
+                                                {this.state.users.map((user, i) => (
                                                     <MenuItem key={i} value={user}>
                                                         {user}
                                                     </MenuItem>
@@ -410,7 +428,7 @@ class NavigationDrawer extends React.Component {
                         <Route path={this.props.match.url + "/newTask"}
                                render={props => <NewTask addTask={this.addTask}/>}/>
                         <Route exact path={this.props.match.url + "/"}
-                               render={props => <Dashboard tasksList={this.props.tasks}
+                               render={props => <Dashboard tasksList={this.state.tasks}
                                                            filteredUser={this.state.filteredUser}
                                                            filteredDueDate={this.state.filteredDueDate}
                                                            filteredStatus={this.state.filteredStatus}/>}/>
