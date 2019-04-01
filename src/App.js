@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import Login from "./Components/Login"
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
 import NavigationDrawer from "./Components/NavigationDrawer";
+import NewUser from "./Components/NewUser";
 
 
 class App extends Component {
@@ -21,6 +22,14 @@ class App extends Component {
         }
     }
 
+    componentWillMount() {
+        if (localStorage.getItem("accessToken") != null) {
+            this.setState({
+                loggedIn: true,
+            });
+        }
+
+    }
     render() {
 
 
@@ -34,13 +43,16 @@ class App extends Component {
                                     <>
                                         <Route path={"/mainView"}
                                                component={NavigationDrawer}/>
-                                        <Route render={() => <h3>Page not found!</h3>}/>
+                                        <Route render={() => <Redirect to="/mainView"/>}/>
+
                                     </>
                                     :
                                     <>
-                                        <Route path="/"
+                                        <Route exact path="/"
                                                render={() => <Login changeLoggedStatus={this.changeLoggedStatus}/>}/>
-                                        <Route render={() => <h3>Page not found!</h3>}/>
+                                        <Route path={"/createNewUser"}
+                                               component={NewUser}/>
+                                        <Route render={() => <Redirect to="/"/>}/>
                                     </>}
                             </Switch>
                         </header>

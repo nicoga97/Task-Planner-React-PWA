@@ -39,7 +39,7 @@ import Button from "@material-ui/core/Button";
 import DateFnsUtils from "@date-io/date-fns";
 import {DatePicker, MuiPickersUtilsProvider} from "material-ui-pickers";
 import MenuItem from "@material-ui/core/MenuItem";
-import api from "./api";
+import axios from "axios";
 
 
 const drawerWidth = 280;
@@ -144,8 +144,8 @@ class NavigationDrawer extends React.Component {
         this.state = {
             dialogOpen: false,
             open: false,
-            userFullName: "Nicolas Garcia",
-            userEmail: "nicoga97@gmail.com",
+            userFullName: " ",
+            userEmail: " ",
             filteredUser: "Select",
             filteredStatus: "Select",
             filteredDueDate: null,
@@ -153,12 +153,10 @@ class NavigationDrawer extends React.Component {
             fUser: "Select",
             fStatus: "Select",
             fDueDate: null,
-            tasks: [],
             users: [],
         };
         this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
         this.handleDrawerClose = this.handleDrawerClose.bind(this);
-        this.addTask = this.addTask.bind(this);
         this.handleDialogOpen = this.handleDialogOpen.bind(this);
         this.handleDialogClose = this.handleDialogClose.bind(this);
         this.updateUserData = this.updateUserData.bind(this);
@@ -235,21 +233,15 @@ class NavigationDrawer extends React.Component {
 
     }
 
-    componentDidMount() {
-
-        api.get(`tasks`)
-            .then(res => {
-                console.log(res.data);
-                this.setState({tasks: res.data});
-            }).catch(function (error) {
-            console.log(error)
+    componentWillMount() {
+        axios.get('https://task-panner-api.herokuapp.com/api/users').then((res) => {
+            this.setState({users: res.data});
+        }).catch(function (error) {
+            console.log(error);
         });
-        api.get(`users`)
-            .then(res => {
-                console.log(res.data);
-                this.setState({users: res.data});
-            })
-
+        this.setState({
+            userEmail: localStorage.getItem("userEmail"), userFullName: localStorage.getItem("userName")
+        })
     }
 
     render() {
@@ -428,8 +420,7 @@ class NavigationDrawer extends React.Component {
                         <Route path={this.props.match.url + "/newTask"}
                                render={props => <NewTask addTask={this.addTask}/>}/>
                         <Route exact path={this.props.match.url + "/"}
-                               render={props => <Dashboard tasksList={this.state.tasks}
-                                                           filteredUser={this.state.filteredUser}
+                               render={props => <Dashboard filteredUser={this.state.filteredUser}
                                                            filteredDueDate={this.state.filteredDueDate}
                                                            filteredStatus={this.state.filteredStatus}/>}/>
                         <Route path={this.props.match.url + "/updateUserInfo"}

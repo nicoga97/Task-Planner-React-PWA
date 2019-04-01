@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
+import axios from "axios";
 
 
 const styles = theme => ({
@@ -37,10 +38,27 @@ const styles = theme => ({
 class Dashboard extends React.Component {
 
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            tasks: [],
+        }
+    }
 
+    componentWillMount() {
+        if (localStorage.getItem("accessToken")) {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem("accessToken");
+        }
+        axios.get('https://task-panner-api.herokuapp.com/api/tasks').then((res) => {
+            this.setState({tasks: res.data});
+        }).catch(function (error) {
+            console.log(error);
+        });
+
+    }
     render() {
         const {classes} = this.props;
-        const taskList = this.props.tasksList.filter(task => (this.props.filteredUser === task.responsible.name || this.props.filteredUser === "Select")
+        const taskList = this.state.tasks.filter(task => (this.props.filteredUser === task.responsible.name || this.props.filteredUser === "Select")
             && (this.props.filteredDueDate === null || this.props.filteredDueDate === task.dueDate)
             && (this.props.filteredStatus === task.status || this.props.filteredStatus === "Select")).map((task, i) => {
             return (

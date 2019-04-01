@@ -11,8 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import axios from "axios";
-import {withRouter} from "react-router-dom";
-
+import {Link, withRouter} from "react-router-dom";
 
 const styles = theme => ({
     main: {
@@ -57,11 +56,11 @@ class SignIn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: "",
+            email: "",
             password: "",
         };
         this.handleLogin = this.handleLogin.bind(this);
-        this.handleUserNameChange = this.handleUserNameChange.bind(this);
+        this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
 
     }
@@ -79,9 +78,9 @@ class SignIn extends React.Component {
                         <Avatar src={window.location.origin + "/images/task.png"} className={classes.bigAvatar}/>
                         <form className={classes.form}>
                             <FormControl margin="normal" required fullWidth>
-                                <InputLabel htmlFor="userName">User Name</InputLabel>
-                                <Input id="userName" name="userName" autoComplete="userName"
-                                       onChange={this.handleUserNameChange} autoFocus/>
+                                <InputLabel htmlFor="email">Email</InputLabel>
+                                <Input id="email" name="email" autoComplete="email"
+                                       onChange={this.handleEmailChange} autoFocus/>
                             </FormControl>
                             <FormControl margin="normal" required fullWidth>
                                 <InputLabel htmlFor="password">Password</InputLabel>
@@ -104,6 +103,8 @@ class SignIn extends React.Component {
                             </Button>
                             <Button
                                 fullWidth
+                                component={Link}
+                                to="/createNewUser"
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}
@@ -118,8 +119,8 @@ class SignIn extends React.Component {
 
     }
 
-    handleUserNameChange(ev) {
-        this.setState({userName: ev.target.value});
+    handleEmailChange(ev) {
+        this.setState({email: ev.target.value});
     }
 
     handlePasswordChange(ev) {
@@ -129,10 +130,13 @@ class SignIn extends React.Component {
     handleLogin(e) {
         e.preventDefault();
         axios.post('https://task-panner-api.herokuapp.com/user/login', {
-            username: this.state.userName,
+            email: this.state.email,
             password: this.state.password
         }).then((response) => {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.accessToken;
             localStorage.setItem("accessToken", response.data.accessToken);
+            localStorage.setItem("userName", response.data.user.name);
+            localStorage.setItem("userEmail", response.data.user.email);
             this.props.changeLoggedStatus();
             this.props.history.push("/mainView")
         }).catch(function (error) {
