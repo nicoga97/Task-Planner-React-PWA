@@ -67,14 +67,20 @@ class NewUser extends React.Component {
                             Create an account
                         </Typography>
                         <Avatar src={window.location.origin + "/images/task.png"} className={classes.bigAvatar}/>
-                        <form className={classes.form}>
+                        <form className={classes.form} onSubmit={this.handleSubmit}>
                             <TextField required label="Full name" fullWidth
                                        onChange={event => this.setState({name: event.target.value})}/>
+                            <br/>
+                            <br/>
                             <TextField required label="Email" fullWidth
                                        onChange={event => this.setState({email: event.target.value})}/>
+                            <br/>
+                            <br/>
 
                             <TextField required label="Password" type="password" fullWidth
                                        onChange={event => this.setState({password: event.target.value})}/>
+                            <br/>
+                            <br/>
                             <TextField required label="Confirm password" type="password" fullWidth
                                        onChange={event => this.setState({confirmPassword: event.target.value})}/>
                             <br/><br/>
@@ -105,7 +111,8 @@ class NewUser extends React.Component {
                 password: this.state.password,
                 name: this.state.name
             }).then((response) => {
-                alert("New user succesfully registered!")
+                alert("New user succesfully registered!");
+                this.props.history.push("/");
 
             }).catch(function (error) {
                 console.log(error)

@@ -183,14 +183,6 @@ class NavigationDrawer extends React.Component {
         this.setState({open: false});
     };
 
-    addTask(task) {
-        this.setState(prevState => ({
-            tasks: prevState.tasks.concat(task),
-            open: prevState.open,
-        }));
-
-    }
-
     handleFilteredUserChange(ev) {
         this.setState({fUser: ev.target.value});
     }
@@ -234,8 +226,10 @@ class NavigationDrawer extends React.Component {
     }
 
     componentWillMount() {
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem("accessToken");
         axios.get('https://task-panner-api.herokuapp.com/api/users').then((res) => {
             this.setState({users: res.data});
+            localStorage.setItem("users", JSON.stringify(res.data))
         }).catch(function (error) {
             console.log(error);
         });
@@ -300,8 +294,8 @@ class NavigationDrawer extends React.Component {
                                                 margin="normal"
                                             >
                                                 {this.state.users.map((user, i) => (
-                                                    <MenuItem key={i} value={user}>
-                                                        {user}
+                                                    <MenuItem key={i} value={user.email}>
+                                                        {user.name}
                                                     </MenuItem>
                                                 ))}
                                             </TextField>
@@ -418,7 +412,7 @@ class NavigationDrawer extends React.Component {
                     <main className={classes.content}>
                         <div className={classes.toolbar}/>
                         <Route path={this.props.match.url + "/newTask"}
-                               render={props => <NewTask addTask={this.addTask}/>}/>
+                               render={props => <NewTask/>}/>
                         <Route exact path={this.props.match.url + "/"}
                                render={props => <Dashboard filteredUser={this.state.filteredUser}
                                                            filteredDueDate={this.state.filteredDueDate}

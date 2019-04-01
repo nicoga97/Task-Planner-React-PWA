@@ -12,6 +12,7 @@ import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
 import {DatePicker, MuiPickersUtilsProvider} from "material-ui-pickers";
 import Fab from "@material-ui/core/Fab";
+import axios from "axios";
 
 const styles = theme => ({
     root: {
@@ -56,6 +57,46 @@ const status = [
         label: "Done",
     },
 ];
+const priority = [
+    {
+        value: 1,
+        label: "Priority 1",
+    },
+    {
+        value: 2,
+        label: "Priority 2",
+    },
+    {
+        value: 3,
+        label: "Priority 3",
+    },
+    {
+        value: 4,
+        label: "Priority 4",
+    },
+    {
+        value: 5,
+        label: "Priority 5",
+    },
+    {
+        value: 6,
+        label: "Priority 6",
+    },
+    {
+        value: 7,
+        label: "Priority 8",
+    },
+    {
+        value: 9,
+        label: "Priority 9",
+    },
+    {
+        value: 10,
+        label: "Priority 10",
+    },
+
+];
+
 class NewTask extends React.Component {
 
     constructor(props) {
@@ -65,15 +106,37 @@ class NewTask extends React.Component {
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.handleResponsibleChange = this.handleResponsibleChange.bind(this);
         this.handleStatusChange = this.handleStatusChange.bind(this);
+        this.handlePriorityChange = this.handlePriorityChange.bind(this);
         this.state = {
             dueDate: moment(),
             description: "",
             status: "",
-            responsible: "",
+            responsible: {name: "", email: "", password: null},
+            priority: "",
+            users: [],
+
         };
 
     }
 
+    componentWillMount() {
+
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem("accessToken");
+        const users = localStorage.getItem("users");
+        if (users) {
+            const value = JSON.parse(users);
+            this.setState({users: value})
+        } else {
+            axios.get('https://task-panner-api.herokuapp.com/api/users').then((res) => {
+                this.setState({users: res.data});
+                localStorage.setItem("users", JSON.stringify(res.data))
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+
+
+    }
 
     render() {
         const {classes} = this.props;
@@ -86,34 +149,69 @@ class NewTask extends React.Component {
                     </Grid>
 
 
-                        <form className={classes.container} noValidate autoComplete="off">
-                            <Grid item xs={12}>
+                    <form className={classes.container} noValidate autoComplete="off">
+                        <Grid item xs={12}>
                             <TextField
                                 required
                                 id="Description"
                                 label="Description"
                                 onChange={this.handleDescriptionChange}
-                                defaultValue=" "
+                                value={this.state.description}
                                 className={classes.textField}
                                 margin="normal"
                             />
-                            </Grid>
-                                <Grid item xs={12}>
+                        </Grid>
+                        <Grid item xs={12}>
                             <TextField
-                                required
+                                select
                                 id="responsible"
                                 label="Responsible"
-                                defaultValue=" "
                                 onChange={this.handleResponsibleChange}
                                 className={classes.textField}
+                                value={this.state.responsible}
+                                SelectProps={{
+                                    MenuProps: {
+                                        className: classes.menu,
+                                    },
+                                }}
+                                helperText="Please select the responsible of the task"
                                 margin="normal"
-                            />
-                                </Grid>
-                            <Grid item xs={12}>
+                            >
+                                {this.state.users.map(user => (
+                                    <MenuItem key={user.email} value={user}>
+                                        {user.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
                             <TextField
                                 id="standard-select"
                                 select
-                                label="Select"
+                                label="Priority"
+                                className={classes.textField}
+                                value={this.state.priority}
+                                onChange={this.handlePriorityChange}
+                                SelectProps={{
+                                    MenuProps: {
+                                        className: classes.menu,
+                                    },
+                                }}
+                                helperText="Please select the priority of the task"
+                                margin="normal"
+                            >
+                                {priority.map(option => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                id="standard-select"
+                                select
+                                label="Status"
                                 className={classes.textField}
                                 value={this.state.status}
                                 onChange={this.handleStatusChange}
@@ -131,21 +229,21 @@ class NewTask extends React.Component {
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            </Grid>
-                            <Grid item xs={12}>
+                        </Grid>
+                        <Grid item xs={12}>
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <DatePicker
                                     margin="normal"
                                     className={classes.textField}
-                                    label="Date picker"
+                                    label="Due date"
                                     id="due-date"
                                     value={this.state.dueDate}
                                     onChange={this.handleDateChange}>
                                 </DatePicker>
                             </MuiPickersUtilsProvider>
 
-                            </Grid>
-                        </form>
+                        </Grid>
+                    </form>
 
                 </Grid>
                 <Tooltip title="Add" aria-label="Add">
@@ -169,18 +267,34 @@ class NewTask extends React.Component {
         this.setState({status: ev.target.value});
     }
 
+    handlePriorityChange(ev) {
+        this.setState({priority: ev.target.value});
+    }
+
     handleAddButton() {
         const newTask = {
             description: this.state.description,
-            responsible: {
-                name: this.state.responsible,
-                email: "sancarbar@gmail.com"
-            },
+            responsible: this.state.responsible,
             status: this.state.status,
+            priority: this.state.priority,
             dueDate: this.state.dueDate
         };
-        this.props.addTask(newTask);
-        this.props.history.push("/mainView");
+        axios.post('https://task-panner-api.herokuapp.com/api/tasks', {
+            description: this.state.description,
+            responsible: this.state.responsible,
+            status: this.state.status,
+            priority: this.state.priority,
+            dueDate: this.state.dueDate
+        }).then((response) => {
+            const data = localStorage.getItem("tasks");
+            const tasks = JSON.parse(data);
+            tasks.push(newTask);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            this.props.history.push("/mainView");
+        }).catch(function (error) {
+            alert("An error has ocurred!")
+        });
+
     }
 
     handleDateChange(date) {
